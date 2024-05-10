@@ -1,21 +1,15 @@
 package com.thymeleafcustom.tag.customtags;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.AbstractElementTagProcessor;
 import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.templatemode.TemplateMode;
-
 
 import com.thymeleafcustom.tag.model.Employee;
 import com.thymeleafcustom.tag.model.StakeholderGroup;
@@ -150,12 +144,24 @@ public class TableViewTag extends AbstractElementTagProcessor{
 	
 	
 	private StakeholderGroup getStkGrpData2() {
+
+		Set<StakeholderGroup> stkGrp23ChildList1 = new HashSet<>();
+		stkGrp23ChildList1.add(new StakeholderGroup("StkGrp23Child1", "Shahriar1", getEmpData(),  null));
+		stkGrp23ChildList1.add(new StakeholderGroup("StkGrp23Child2", "Shahriar2", getEmpData(),  null));
+		
+		Set<StakeholderGroup> stkGrp2ChildList = new HashSet<>();
+		stkGrp2ChildList.add(new StakeholderGroup("StkGrp23Child1", "Shahriar1", getEmpData(),  stkGrp23ChildList1));
+		stkGrp2ChildList.add(new StakeholderGroup("StkGrp23Child2", "Shahriar2", getEmpData(),  null));
+		
+
+		Set<StakeholderGroup> stkGrp3ChildList = new HashSet<>();
+		stkGrp3ChildList.add(new StakeholderGroup("StkGrp3Child1", "Shahriar1", getEmpData(),  null));
+		stkGrp3ChildList.add(new StakeholderGroup("StkGrp3Child2", "Shahriar2", getEmpData(),  null));
+		
 		Set<StakeholderGroup> stkList = new HashSet<>();
-		Set<StakeholderGroup> stkGrp1ChildList = new HashSet<>();
-		stkGrp1ChildList.add(new StakeholderGroup("StkGrp1Child1", "Shahriar1", getEmpData(),  null));
-		stkGrp1ChildList.add(new StakeholderGroup("StkGrp1Child2", "Shahriar2", getEmpData(),  null));
-		stkList.add(new StakeholderGroup("StkGrp2", "Rakib", getEmpData(),  stkGrp1ChildList));
-		stkList.add(new StakeholderGroup("StkGrp3", "Mayen", getEmpData(),  stkGrp1ChildList));
+		stkList.add(new StakeholderGroup("StkGrp2", "Rakib", getEmpData(),  stkGrp2ChildList));
+		stkList.add(new StakeholderGroup("StkGrp3", "Mayen", getEmpData(),  stkGrp3ChildList));
+		
 		StakeholderGroup stakeholder = new StakeholderGroup("StkGrp1", "Shahriar1", getEmpData(),  stkList);
 		return stakeholder;
 	}
@@ -180,25 +186,32 @@ public class TableViewTag extends AbstractElementTagProcessor{
 	        sb.append("<th> Objective </th>");
 	        sb.append("</tr>");
 	    }
-	    buildFunctionTabularsheet(rootGroup, sb);
+	    buildFunctionTabularsheet(rootGroup, sb,0, subGroupDepth);
 	    sb.append("</table>");
 	    return sb.toString();
 	}
 	
-	private void buildFunctionTabularsheet(StakeholderGroup function, StringBuilder content) {
+	private void buildFunctionTabularsheet(StakeholderGroup function, StringBuilder content,int columnCount, int depth) {
 		
 		 Set<StakeholderGroup> functions = function.getChildren()!=null ? function.getChildren() : new HashSet<>();
 	    content.append("<tr>");
+	    for(int i=0;i<columnCount;i++) {
+	    	content.append("<td></td>");
+	    }
+
 	    content.append("<td>").append(function.getGroupName()).append("</td>");
-	    for (int i = 0; i < functions.size(); i++) {
+	    
+	    for (int i = 0; i < depth-columnCount; i++) {
 	        content.append("<td></td>");
 	    }
+	    columnCount++;
 	    content.append("<td>stakeholder 1</td>");
 	    content.append("</tr>");
-
+	    
+	    
 	    if (functions != null) {
 	        for (StakeholderGroup func : functions) {
-	            buildFunctionTabularsheet(func,  content);
+	            buildFunctionTabularsheet(func,  content,columnCount, depth);
 	        }
 	    }
 	}
