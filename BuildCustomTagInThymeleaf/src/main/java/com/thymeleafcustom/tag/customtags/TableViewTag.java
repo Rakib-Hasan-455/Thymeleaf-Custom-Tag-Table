@@ -191,15 +191,15 @@ public class TableViewTag extends AbstractElementTagProcessor{
 	    return sb.toString();
 	}
 	
-	private void buildFunctionTabularsheet(StakeholderGroup function, StringBuilder content,int columnCount, int depth) {
+	private void buildFunctionTabularsheet(StakeholderGroup stkGroup, StringBuilder content,int columnCount, int depth) {
 		
-		 Set<StakeholderGroup> functions = function.getChildren()!=null ? function.getChildren() : new HashSet<>();
+		 Set<StakeholderGroup> stkGroups = stkGroup.getChildren()!=null ? stkGroup.getChildren() : new HashSet<>();
 	    content.append("<tr>");
 	    for(int i=0;i<columnCount;i++) {
 	    	content.append("<td></td>");
 	    }
 
-	    content.append("<td>").append(function.getGroupName()).append("</td>");
+	    content.append("<td>").append(stkGroup.getGroupName()).append("</td>");
 	    
 	    for (int i = 0; i < depth-columnCount; i++) {
 	        content.append("<td></td>");
@@ -209,8 +209,8 @@ public class TableViewTag extends AbstractElementTagProcessor{
 	    content.append("</tr>");
 	    
 	    
-	    if (functions != null) {
-	        for (StakeholderGroup func : functions) {
+	    if (stkGroups != null) {
+	        for (StakeholderGroup func : stkGroups) {
 	            buildFunctionTabularsheet(func,  content,columnCount, depth);
 	        }
 	    }
